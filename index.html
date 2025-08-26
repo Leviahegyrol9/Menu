@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/style.css">
+    <title>Étlap</title>
+</head>
+<body>
+    <div>
+        <span id="soup"></span>
+        <br>
+        <span id="main"></span>
+        <br>
+        <span id="dessert"></span>
+        <br>
+        <button onclick="Generate()">Generálás</button>
+    </div>
+
+    <script>
+        const lsSoup = localStorage.getItem("soup");
+        const lsMain = localStorage.getItem("main");
+        const lsDessert =localStorage.getItem("dessert");
+
+        const soupRow = document.getElementById("soup");
+        const mainRow = document.getElementById("main");
+        const dessertRow = document.getElementById("dessert");
+
+        if (lsSoup && lsMain && lsDessert) {
+            soupRow.innerHTML = lsSoup;
+            mainRow.innerHTML = lsMain;
+            dessertRow.innerHTML = lsDessert;
+        }
+        else {
+            Generate();
+        }
+
+        function Generate() {
+        fetch("https://leviahegyrol9.github.io/Menu/menu.json")
+        .then(response => response.json())
+        .then(data => {
+
+        var soup = data.levesek[Math.floor(Math.random() * data.levesek.length)];
+        var main = data.foetelek[Math.floor(Math.random() * data.foetelek.length)];
+        var dessert = data.desszertek[Math.floor(Math.random() * data.desszertek.length)];
+
+        soupRow.innerHTML = `<b>Leves:</b> ${soup}`;
+        mainRow.innerHTML = `<b>Főétel:</b> ${main}`;
+        dessertRow.innerHTML = `<b>Desszert:</b> ${dessert}`;
+
+        localStorage.setItem("soup", soupRow.innerHTML);
+        localStorage.setItem("main", mainRow.innerHTML);
+        localStorage.setItem("dessert", dessertRow.innerHTML);
+
+        })
+        .catch(error => console.error("Hiba történt:", error));
+        }
+    </script>
+</body>
+</html>
